@@ -45,7 +45,7 @@ public class Log {
 
         logger.info(transicion+=" ");
 
-        logger.info("Al disparar " + transicion + " en el momento "+ date + "se pasa de " + Arrays.toString(marcado1) + " a " + Arrays.toString(marcado2) + "\n");
+        //logger.info("Al disparar " + transicion + " en el momento "+ date + "se pasa de " + Arrays.toString(marcado1) + " a " + Arrays.toString(marcado2) + "\n");
     }
 
     public ArrayList<String> getLista() {

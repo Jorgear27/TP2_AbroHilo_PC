@@ -16,6 +16,7 @@ public class HiloVerde extends Thread {
     public HiloVerde (Monitor monitor, RdP red) {
         this.monitor = monitor;
         this.red = red;
+        this.setName("Hilo Verde");
     }
 
     @Override

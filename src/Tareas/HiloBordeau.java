@@ -23,6 +23,7 @@ public class HiloBordeau extends Thread {
     public HiloBordeau (Monitor monitor, RdP red) {
         this.monitor = monitor;
         this.red = red;
+        this.setName("Hilo Bordeau");
         //transiciones = new int[responsabilidades][];
         //transiciones[0] = T0;
         //transiciones[1] = T1;
@@ -31,9 +32,7 @@ public class HiloBordeau extends Thread {
     @Override
     public void run() {
         while (true) { //Cuando se despierte tiene que volver a chequear???
-            System.out.println("Soy el hilo bordeau");
             boolean flag = monitor.fireTransition(transiciones[0]);
-            System.out.println("Flag: " + flag);
             if (flag) {
                 //el hilo deberia tener que preguntar unicamente por su transicion que tiene conflicto?
                 //sus otras transiciones sin conflicto deberian dispararse por el mismo,sin entrar al monitor?

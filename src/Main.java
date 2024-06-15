@@ -2,12 +2,15 @@ import GestorMonitor.Monitor;
 import RedPetri.RdP;
 import Tareas.*;
 
+import java.util.Arrays;
+
 public class Main {
     public static void main(String[] args) {
 
     RdP rdp = new RdP();
 
     Monitor monitor = new Monitor(rdp);
+
     /*
     for(int i = 0; i<rdp.getcantidadTransiciones() ; i++){
 
@@ -16,6 +19,7 @@ public class Main {
 
         // TransicionesSensibilizadas = new int[]{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     }*/
+
 
     // Creamos e iniciamos todos los hilos de la red
     HiloBordeau hilo1 = new HiloBordeau(monitor, rdp);

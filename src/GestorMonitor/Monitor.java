@@ -1,5 +1,6 @@
 package GestorMonitor;
 
+import java.util.Arrays;
 import java.util.concurrent.Semaphore;
 import Cola.Cola;
 import Politica.Politica;
@@ -29,18 +30,21 @@ public class Monitor implements MonitorInterfaz {
     public boolean fireTransition(int transicion) {
 
         try {  //intentamos agarrar el mutex para entrar al monitor
+            System.out.println("Voy a intentar agarrar el mutex " + Thread.currentThread().getName());
             mutex.acquire(); //Si no hay nadie en la cola de espera Ep, tomo el recurso
-            System.out.println("Obtuve el mutex"+Thread.currentThread().getName());
+            System.out.println("Obtuve el mutex " + Thread.currentThread().getName());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
         k = true;
         while (k) {
-            /* O hacemos asi o implementamos que en la red de petri reciba un entero y no un array*/
             int[] vector_disparo = new int[12];
             vector_disparo[transicion] = 1;
+            System.out.println("Vector generado a partir del numero de transicion" + Arrays.toString(vector_disparo));
+
             k = rdp.disparoPosible(vector_disparo);  //le preguntamos a la red de petri si puede dispararse, vuelve con k actualizado
+            System.out.println("flag k: " + k);
 
             if (k) {
                 System.out.println("Se puede disparar la transicion: " + transicion);
@@ -53,27 +57,44 @@ public class Monitor implements MonitorInterfaz {
                     Tposibles[i] = sensibilizadas[i] * Tesperando[i];
                     System.out.print(Tposibles[i]);
                 }
+                System.out.println();
 
                 if (hayTransicionesPosibles(Tposibles)) { //m<>0
                     int disparonuevo = politicas.cual(Tposibles); //politica de disparo
-                    colaW.despertar(disparonuevo); // sacar del la cola
-                    return true; //el true fue que se pudo disparar la transicion y me voy del monitor
+                    System.out.println("Despierto a la transicion: " + disparonuevo);
+                     // notificar al hilo correspondiente y lo saca de la cola
+                    Thread aux = colaW.despertar(disparonuevo);
+                    synchronized (aux){
+                        aux.notify();
+                    }
+                    return true; //el true fue que se pudo disparar la transicion y me voy del monitor y sigue el que desperte
                 } else {  //m==0
                     k = false;
-                    System.out.println("Suelto el mutex"+Thread.currentThread().getName());
+                    System.out.println(Thread.currentThread().getName()+" No encontre a nadie en la cola de recursos, asi que me voy del monitor y libero el mutex");
                     mutex.release();
                     return true;
                 }
             } else {
+                System.out.println(Thread.currentThread().getName()+" No se puede disparar la transicion: " + transicion + " asi que libero el mutex y me voy a la cola de recursos ");
                 mutex.release();
                 colaW.entrar(Thread.currentThread(), transicion);
-
+                try {
+                    synchronized(Thread.currentThread()){
+                        Thread.currentThread().wait();
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println(Thread.currentThread().getName()+ "Me desperte");
                 //k =! rdp.disparoPosible(vector_disparo); //si tiene los recursos manda k=false
             }
         }
         mutex.release();
+        System.out.println("Se rompio el while y libero el mutex");
         return true;
     }
+
+
 
     private boolean hayTransicionesPosibles(int [] Tposibles) {
         for (int i = 0; i < Tposibles.length; i++) {

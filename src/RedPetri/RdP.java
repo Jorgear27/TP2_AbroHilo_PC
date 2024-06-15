@@ -1,5 +1,6 @@
 package RedPetri;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import LOG.Log;
@@ -17,7 +18,7 @@ public class RdP {
     private int[] TransicionesSensibilizadas;
 
     private final int[][] MatrizIncidencia;               // columnas = numero de transiciones = 12
-                                                        // filas = numero de plazas = 15
+                                                          // filas = numero de plazas = 15
     private HashMap<int[],Date> historialDisparos;
 
 
@@ -25,7 +26,8 @@ public class RdP {
     public RdP() {
 
         historialDisparos = new HashMap<>();
-        Log log = new Log();
+
+        this.log = new Log();
 
         Marcado = new int[]{5, 1, 0, 0, 5, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0};
 
@@ -52,7 +54,6 @@ public class RdP {
         };
 
         setTransicionesSensibilizadas(sensibilizar()); // TransicionesSensibilizadas = new int[]{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
     }
 
     public int[] getMarcado() {
@@ -97,20 +98,13 @@ public class RdP {
     }
 
     private boolean invariantesPlaza() {
-
-            int contador = 0;
-            for (int i = 0; i < Marcado.length; i++) {
-                contador += Marcado[i];
-            }
-
-            boolean condition1 = contador == 5;
-            boolean condition2 = Marcado[1] + Marcado[2] == 1;
-            boolean condition3 = Marcado[2] + Marcado[3] + Marcado[4] == 5;
-            boolean condition4 = Marcado[5] + Marcado[6] == 1;
-            boolean condition5 = Marcado[7] + Marcado[8] == 1;
-            boolean condition6 = Marcado[10] + Marcado[11] + Marcado[12] + Marcado[13] == 1;
-
-            return condition1 && condition2 && condition3 && condition4 && condition5 && condition6;
+        boolean condition1 = Marcado[0] + Marcado[2] + Marcado[3] + Marcado[5] + Marcado[8] + Marcado[9] + Marcado[11] + Marcado[12] + Marcado[13] + Marcado[14] == 5;
+        boolean condition2 = Marcado[1] + Marcado[2] == 1;
+        boolean condition3 = Marcado[2] + Marcado[3] + Marcado[4] == 5;
+        boolean condition4 = Marcado[5] + Marcado[6] == 1;
+        boolean condition5 = Marcado[7] + Marcado[8] == 1;
+        boolean condition6 = Marcado[10] + Marcado[11] + Marcado[12] + Marcado[13] == 1;
+        return condition1 && condition2 && condition3 && condition4 && condition5 && condition6;
 
 
     }
@@ -212,7 +206,7 @@ public class RdP {
             int[] m1 = getMarcado();
             int[] m2 = ecuacionFundamental(disparo);
 
-            //log.loggear(m1,disparo,date,m2);
+            log.loggear(m1,disparo,date,m2);
 
             setMarcado(m2);
 
@@ -222,6 +216,7 @@ public class RdP {
 
             else{
                 System.out.println("HUBO UN PROBLEMA. El marcado generado no respeta los invariantes de Plaza");
+                System.out.println(Arrays.toString(getMarcado()));
             }
 
 
