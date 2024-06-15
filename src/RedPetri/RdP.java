@@ -2,6 +2,7 @@ package RedPetri;
 
 import java.util.Date;
 import java.util.HashMap;
+import LOG.Log;
 
 public class RdP {
 
@@ -9,6 +10,7 @@ public class RdP {
     private final int cantidadPlazas = 15;
     private final int cantidadTransiciones = 12;
 
+    private Log log;
 
     private int[] Marcado;                          // 15
 
@@ -20,8 +22,11 @@ public class RdP {
 
 
 
-
     public RdP() {
+
+        historialDisparos = new HashMap<>();
+        Log log = new Log();
+
         Marcado = new int[]{5, 1, 0, 0, 5, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0};
 
         MatrizIncidencia = new int[][]{
@@ -66,8 +71,6 @@ public class RdP {
         return cantidadPlazas;
     }
 
-
-
     private int[] ecuacionFundamental(int[] disparo){
 
         // Multiplicamos la MatrizIncidencia con el vector disparo obteniendo un vector de tamaño 15
@@ -93,7 +96,6 @@ public class RdP {
 
     }
 
-
     private boolean invariantesPlaza() {
 
             int contador = 0;
@@ -116,12 +118,11 @@ public class RdP {
 
     public boolean disparoPosible(int[] disparo) {
 
-
-        int[] aux = ecuacionFundamental(disparo);
+        int[] nuevoMarcado = ecuacionFundamental(disparo);
 
         // Vemos si encontramos uno negativo
-        for (int i = 0; i < aux.length; i++) {
-            if (aux[i] < 0) {
+        for (int i = 0; i < nuevoMarcado.length; i++) {
+            if (nuevoMarcado[i] < 0) {
                 return false;
             }
         }
@@ -192,7 +193,6 @@ public class RdP {
         return aux;
     }
 
-
     public void setMarcado (int[] marcado){
         Marcado = marcado;
     }
@@ -202,14 +202,19 @@ public class RdP {
     }
 
 
-    public void actualizarRdP (int[] disparo){ // deberia recibir un int
+    public void actualizarRdP (int[] disparo) { // deberia recibir un int
 
         if (disparoPosible(disparo)) {
 
             Date date = new Date();
             historialDisparos.put(disparo, date);
 
-            setMarcado(ecuacionFundamental(disparo));
+            int[] m1 = getMarcado();
+            int[] m2 = ecuacionFundamental(disparo);
+
+            //log.loggear(m1,disparo,date,m2);
+
+            setMarcado(m2);
 
             if(invariantesPlaza()){
                 System.out.println("Se respetaron los invariantes de Plaza");
@@ -224,10 +229,6 @@ public class RdP {
         } else {
             System.out.println("No es posible realizar este disparo");
         }
-
-
     }
-
-
 
 }

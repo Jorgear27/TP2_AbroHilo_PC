@@ -23,6 +23,13 @@ public class Cola {
             e.printStackTrace();
         }
     }
+
+    public boolean estaVacia() {
+        if (hilosEsperando.length == 0) {
+            return true;
+        }
+        return false;
+    }
     /*
     public boolean hayEsperando(Thread thread) {
         return queue.contains(thread);
@@ -39,5 +46,6 @@ public class Cola {
     public void despertar(int transicion) {
         transicionesEsperando[transicion] = 0;
         hilosEsperando[transicion].notify();
+        //hilosEsperando[transicion] = None;
     }
 }
