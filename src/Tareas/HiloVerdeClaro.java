@@ -13,25 +13,28 @@ public class HiloVerdeClaro extends Thread {
 
     private final int[] demoras = {0};
 
+    private int clientesAtendidos;
+
     public HiloVerdeClaro (Monitor monitor, RdP red) {
         this.monitor = monitor;
         this.red = red;
+        this.clientesAtendidos = 0;
         this.setName("Hilo VerdeClaro");
     }
 
     @Override
     public void run() {
-        while (true) { //Cuando se despierte tiene que volver a chequear???
-            boolean flag = monitor.fireTransition(transiciones[0]);
-            if (flag) {
-                //el hilo deberia tener que preguntar unicamente por su transicion que tiene conflicto?
-                //sus otras transiciones sin conflicto deberian dispararse por el mismo,sin entrar al monitor?
-                for (int i = 0; i < transiciones.length; i++) {
+        boolean flag = true;
+        while (flag) {
+            for (int i = 0; i < transiciones.length; i++) {
+                if (monitor.fireTransition(transiciones[i])) {
                     int[] vector_disparo = new int[12];
                     vector_disparo[transiciones[i]] = 1;
 
-                    System.out.println("T" + transiciones[i] + " disparada");
-                    red.actualizarRdP(vector_disparo);
+                    System.out.println(Thread.currentThread().getName()+": T" + transiciones[i] + " disparada");
+                    //red.actualizarRdP(vector_disparo);
+
+                    clientesAtendidos++;
 
                     try {
                         sleep(demoras[i]); // demora de la transicion
@@ -39,6 +42,12 @@ public class HiloVerdeClaro extends Thread {
                         throw new RuntimeException(e);
                     }
                 }
+            }
+            if (clientesAtendidos == 10) {
+                System.out.println("Clientes atendidos: " + clientesAtendidos);
+                System.out.println("Cerramos el proceso de reservas." + Thread.currentThread().getName() + " termina.");
+                flag = false;
+                System.exit(0);
             }
         }
     }
