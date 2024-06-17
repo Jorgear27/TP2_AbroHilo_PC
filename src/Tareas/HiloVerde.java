@@ -5,6 +5,8 @@ import RedPetri.RdP;
 
 public class HiloVerde extends Thread {
 
+    private int ventasP7;
+
     private Monitor monitor;
 
     private RdP red;
@@ -14,9 +16,14 @@ public class HiloVerde extends Thread {
     private final int[] demoras = {1000};
 
     public HiloVerde (Monitor monitor, RdP red) {
+        ventasP7 = 0;
         this.monitor = monitor;
         this.red = red;
         this.setName("Hilo Verde");
+    }
+
+    public int getVentasP7() {
+        return ventasP7;
     }
 
     @Override
@@ -37,6 +44,7 @@ public class HiloVerde extends Thread {
                     }
                 }
             }
+            ventasP7++;
         }
     }
 }

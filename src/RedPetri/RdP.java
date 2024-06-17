@@ -3,7 +3,7 @@ package RedPetri;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import LOG.Log;
+//import LOG.Log;
 
 public class RdP {
 
@@ -11,7 +11,7 @@ public class RdP {
     private final int cantidadPlazas = 15;
     private final int cantidadTransiciones = 12;
 
-    private Log log;
+    //private Log log;
 
     private int[] Marcado;                          // 15
 
@@ -27,7 +27,7 @@ public class RdP {
 
         historialDisparos = new HashMap<>();
 
-        this.log = new Log();
+        //this.log = new Log();
 
         Marcado = new int[]{5, 1, 0, 0, 5, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0};
 
@@ -206,7 +206,7 @@ public class RdP {
             int[] m1 = getMarcado();
             int[] m2 = ecuacionFundamental(disparo);
 
-            log.loggear(m1,disparo,date,m2);
+            //log.loggear(m1,disparo,date,m2);
 
             setMarcado(m2);
 

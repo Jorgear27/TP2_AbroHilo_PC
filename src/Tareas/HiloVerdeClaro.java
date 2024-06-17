@@ -5,6 +5,7 @@ import RedPetri.RdP;
 
 public class HiloVerdeClaro extends Thread {
 
+
     private Monitor monitor;
 
     private RdP red;
@@ -14,6 +15,8 @@ public class HiloVerdeClaro extends Thread {
     private final int[] demoras = {0};
 
     private int clientesAtendidos;
+
+    private final int totalClientes = 50;
 
     public HiloVerdeClaro (Monitor monitor, RdP red) {
         this.monitor = monitor;
@@ -43,11 +46,11 @@ public class HiloVerdeClaro extends Thread {
                     }
                 }
             }
-            if (clientesAtendidos == 10) {
+            if (clientesAtendidos == totalClientes) {
                 System.out.println("Clientes atendidos: " + clientesAtendidos);
                 System.out.println("Cerramos el proceso de reservas." + Thread.currentThread().getName() + " termina.");
                 flag = false;
-                System.exit(0);
+                interrupt();
             }
         }
     }

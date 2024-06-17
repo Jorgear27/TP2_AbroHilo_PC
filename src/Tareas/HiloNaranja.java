@@ -5,6 +5,8 @@ import RedPetri.RdP;
 
 public class HiloNaranja extends Thread {
 
+    private int confirmadas;
+
     private Monitor monitor;
 
     private RdP red;
@@ -17,6 +19,11 @@ public class HiloNaranja extends Thread {
         this.monitor = monitor;
         this.red = red;
         this.setName("Hilo Naranja");
+        this.confirmadas = 0;
+    }
+
+    public int getConfirmadas() {
+        return confirmadas;
     }
 
     @Override
@@ -37,6 +44,7 @@ public class HiloNaranja extends Thread {
                     }
                 }
             }
+            confirmadas++;
         }
     }
 }

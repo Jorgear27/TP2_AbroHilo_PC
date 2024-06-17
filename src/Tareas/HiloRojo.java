@@ -5,6 +5,8 @@ import RedPetri.RdP;
 
 public class HiloRojo extends Thread {
 
+    private int canceladas;
+
     private Monitor monitor;
 
     private RdP red;
@@ -17,6 +19,11 @@ public class HiloRojo extends Thread {
         this.monitor = monitor;
         this.red = red;
         this.setName("Hilo Rojo");
+        this.canceladas = 0;
+    }
+
+    public int getCanceladas() {
+        return canceladas;
     }
 
     @Override
@@ -37,6 +44,7 @@ public class HiloRojo extends Thread {
                     }
                 }
             }
+            canceladas++;
         }
     }
 }

@@ -12,13 +12,10 @@ public class HiloBordeau extends Thread {
     private final int[] transiciones = {0, 1};
 
     private final int[] demoras = {0, 1000};
-    //private final int[] Tconflicto = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    //private final int[] T0 = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    //private final int[] T1 = {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-
-    //private int[][] transiciones;
     private int clientesIngresados;
+
+    private final int totalClientes = 50;
 
 
     public HiloBordeau (Monitor monitor, RdP red) {
@@ -26,9 +23,6 @@ public class HiloBordeau extends Thread {
         this.red = red;
         this.setName("Hilo Bordeau");
         this.clientesIngresados = 0;
-        //transiciones = new int[responsabilidades][];
-        //transiciones[0] = T0;
-        //transiciones[1] = T1;
     }
 
     @Override
@@ -55,7 +49,7 @@ public class HiloBordeau extends Thread {
                 }
             }
 
-            if (clientesIngresados == 10) {
+            if (clientesIngresados == totalClientes) {
                 System.out.println("Clientes ingresados: " + clientesIngresados);
                 System.out.println("Cerramos el ingreso de clientes." + Thread.currentThread().getName() + " termina.");
                 flag = false;

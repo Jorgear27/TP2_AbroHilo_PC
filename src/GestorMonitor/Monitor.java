@@ -3,13 +3,14 @@ package GestorMonitor;
 import java.util.Arrays;
 import java.util.concurrent.Semaphore;
 import Cola.Cola;
+import LOG.NewLog;
 import Politica.Politica;
 import RedPetri.RdP;
 
 
 public class Monitor implements MonitorInterfaz {
 
-    private Politica politicas = new Politica();
+    private Politica politica;
 
     private final Semaphore mutex = new Semaphore(1,true);
 
@@ -21,9 +22,13 @@ public class Monitor implements MonitorInterfaz {
 
     private RdP rdp;
 
-    public Monitor(RdP rdp) {
+    private NewLog logger;
+
+    public Monitor(RdP rdp, Politica politica) {
         k = false;
         this.rdp = rdp;
+        this.politica = politica;
+        logger = new NewLog("NewLog.txt");
     }
 
     @Override
@@ -47,6 +52,7 @@ public class Monitor implements MonitorInterfaz {
             if (k) {
                 /** Por lo que entendi de la clase, si podes hacer tu transicion, lo haces aca adentro y despues te vas del monitor */
                 rdp.actualizarRdP(vector_disparo);
+                logger.logTransition(transicion);
                 System.out.println("Pude actualizar la red de petri con el vector de disparo: "+ Arrays.toString(vector_disparo) );
 
                 int[] sensibilizadas = rdp.getTransicionesSensibilizadas(); //[0 0 0 1 0 1 0 1 1] pone un 1 en transiciones que pueden dispararse
@@ -62,7 +68,7 @@ public class Monitor implements MonitorInterfaz {
                 System.out.println("Posibless: " + Arrays.toString(Tposibles));
 
                 if (hayTransicionesPosibles(Tposibles)) { //m<>0
-                    int disparonuevo = politicas.cual(Tposibles); //politica de disparo
+                    int disparonuevo = politica.cual(Tposibles); //politica de disparo
                     System.out.println("Despierto a la transicion: " + disparonuevo);
                     // notificar al hilo correspondiente y lo saca de la cola
                     colaW.despertar(disparonuevo);
@@ -105,6 +111,7 @@ public class Monitor implements MonitorInterfaz {
         }
         return false;
     }
+
 }
 
 
