@@ -8,19 +8,16 @@ public class HiloVerdeClaro extends Thread {
 
     private Monitor monitor;
 
-    private RdP red;
-
     private final int[] transiciones = {11};
 
     private final int[] demoras = {0};
 
     private int clientesAtendidos;
 
-    private final int totalClientes = 50;
+    private final int totalClientes = 186;
 
     public HiloVerdeClaro (Monitor monitor, RdP red) {
         this.monitor = monitor;
-        this.red = red;
         this.clientesAtendidos = 0;
         this.setName("Hilo VerdeClaro");
     }
@@ -34,7 +31,7 @@ public class HiloVerdeClaro extends Thread {
                     int[] vector_disparo = new int[12];
                     vector_disparo[transiciones[i]] = 1;
 
-                    System.out.println(Thread.currentThread().getName()+": T" + transiciones[i] + " disparada");
+                    //System.out.println(Thread.currentThread().getName()+": T" + transiciones[i] + " disparada");
                     //red.actualizarRdP(vector_disparo);
 
                     clientesAtendidos++;
@@ -47,11 +44,11 @@ public class HiloVerdeClaro extends Thread {
                 }
             }
             if (clientesAtendidos == totalClientes) {
-                System.out.println("Clientes atendidos: " + clientesAtendidos);
-                System.out.println("Cerramos el proceso de reservas." + Thread.currentThread().getName() + " termina.");
                 flag = false;
                 interrupt();
+                System.out.println("PROCESO DE ATENCION DE RESERVAS FINALIZADO");
             }
         }
     }
+
 }

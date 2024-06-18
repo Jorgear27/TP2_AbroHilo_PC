@@ -5,18 +5,23 @@ import RedPetri.RdP;
 
 public class HiloAmarillo extends Thread {
 
-    private Monitor monitor;
+    private int ventasP6;
 
-    private RdP red;
+    private Monitor monitor;
 
     private final int[] transiciones = {2};
 
     private final int[] demoras = {0};
 
+    public int getVentasP6() {
+        return ventasP6;
+    }
+
+
     public HiloAmarillo (Monitor monitor, RdP red) {
         this.monitor = monitor;
-        this.red = red;
         this.setName("Hilo Amarillo");
+        this.ventasP6 = 0;
     }
 
     @Override
@@ -24,10 +29,11 @@ public class HiloAmarillo extends Thread {
         while (true) {
             for (int i = 0; i < transiciones.length; i++) {
                 if (monitor.fireTransition(transiciones[i])) {
+
                     int[] vector_disparo = new int[12];
                     vector_disparo[transiciones[i]] = 1;
 
-                    System.out.println(Thread.currentThread().getName()+": T" + transiciones[i] + " disparada");
+                    //System.out.println(Thread.currentThread().getName()+": T" + transiciones[i] + " disparada");
                     //red.actualizarRdP(vector_disparo);
 
                     try {
@@ -37,6 +43,7 @@ public class HiloAmarillo extends Thread {
                     }
                 }
             }
+            ventasP6++;
         }
     }
 

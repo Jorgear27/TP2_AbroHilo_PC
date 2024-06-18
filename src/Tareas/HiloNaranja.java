@@ -9,15 +9,12 @@ public class HiloNaranja extends Thread {
 
     private Monitor monitor;
 
-    private RdP red;
-
     private final int[] transiciones = {6, 9, 10};
 
-    private final int[] demoras = {0, 1000, 1000};
+    private final int[] demoras = {0, 100, 100};
 
     public HiloNaranja (Monitor monitor, RdP red) {
         this.monitor = monitor;
-        this.red = red;
         this.setName("Hilo Naranja");
         this.confirmadas = 0;
     }
@@ -30,11 +27,13 @@ public class HiloNaranja extends Thread {
     public void run() {
         while (true) {
             for (int i = 0; i < transiciones.length; i++) {
+
+
                 if (monitor.fireTransition(transiciones[i])) {
                     int[] vector_disparo = new int[12];
                     vector_disparo[transiciones[i]] = 1;
 
-                    System.out.println(Thread.currentThread().getName()+": T" + transiciones[i] + " disparada");
+                    //System.out.println(Thread.currentThread().getName()+": T" + transiciones[i] + " disparada");
                     //red.actualizarRdP(vector_disparo);
 
                     try {

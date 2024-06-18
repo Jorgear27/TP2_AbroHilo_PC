@@ -3,17 +3,14 @@ package RedPetri;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-//import LOG.Log;
 
 public class RdP {
 
-
     private final int cantidadPlazas = 15;
+
     private final int cantidadTransiciones = 12;
 
-    //private Log log;
-
-    private int[] Marcado;                          // 15
+    private int[] Marcado;
 
     private int[] TransicionesSensibilizadas;
 
@@ -22,12 +19,8 @@ public class RdP {
     private HashMap<int[],Date> historialDisparos;
 
 
-
     public RdP() {
-
         historialDisparos = new HashMap<>();
-
-        //this.log = new Log();
 
         Marcado = new int[]{5, 1, 0, 0, 5, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0};
 
@@ -48,8 +41,6 @@ public class RdP {
                 { 0, 0, 0, 0, 0, 0, 0, 1,-1, 0, 0, 0},//P12
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,-1, 0},//P13
                 { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1,-1},//P14
-
-
 
         };
 
@@ -75,8 +66,6 @@ public class RdP {
     private int[] ecuacionFundamental(int[] disparo){
 
         // Multiplicamos la MatrizIncidencia con el vector disparo obteniendo un vector de tamaño 15
-
-
         int[] aux = new int[cantidadPlazas];
 
         for (int i = 0; i < cantidadPlazas; i++) {
@@ -90,8 +79,6 @@ public class RdP {
         for (int i = 0; i < Marcado.length; i++) {
             aux[i] += Marcado[i];
         }
-
-
         return aux;
 
 
@@ -105,8 +92,6 @@ public class RdP {
         boolean condition5 = Marcado[7] + Marcado[8] == 1;
         boolean condition6 = Marcado[10] + Marcado[11] + Marcado[12] + Marcado[13] == 1;
         return condition1 && condition2 && condition3 && condition4 && condition5 && condition6;
-
-
     }
 
 
@@ -203,22 +188,24 @@ public class RdP {
             Date date = new Date();
             historialDisparos.put(disparo, date);
 
-            int[] m1 = getMarcado();
             int[] m2 = ecuacionFundamental(disparo);
-
-            //log.loggear(m1,disparo,date,m2);
 
             setMarcado(m2);
 
+            int transicion=0;
+            for (int i = 0; i < disparo.length; i++) {
+                if (disparo[i] == 1) {
+                    transicion = i;
+                }
+            }
             if(invariantesPlaza()){
-                System.out.println("Se respetaron los invariantes de Plaza");
+                System.out.println("Se respetaron los invariantes de Plaza al disparar T"+ transicion);
             }
 
             else{
                 System.out.println("HUBO UN PROBLEMA. El marcado generado no respeta los invariantes de Plaza");
                 System.out.println(Arrays.toString(getMarcado()));
             }
-
 
             setTransicionesSensibilizadas(sensibilizar());
         } else {
