@@ -15,21 +15,22 @@ public class Main {
     Monitor monitor = new Monitor(rdp);
 
     /** Creamos todos los hilos de la red */
-    HiloBordeau hilo1 = new HiloBordeau(monitor, rdp);
+    int totalClientes = 186;
+    HiloBordeau hilo1 = new HiloBordeau(monitor, rdp, totalClientes);
     HiloAmarillo hilo2 = new HiloAmarillo(monitor, rdp);
     HiloVioleta hilo3 = new HiloVioleta(monitor, rdp);
     HiloAzul hilo4 = new HiloAzul(monitor, rdp);
     HiloVerde hilo5 = new HiloVerde(monitor, rdp);
     HiloNaranja hilo6 = new HiloNaranja(monitor, rdp);
     HiloRojo hilo7 = new HiloRojo(monitor, rdp);
-    HiloVerdeClaro hilo8 = new HiloVerdeClaro(monitor, rdp);
+    HiloVerdeClaro hilo8 = new HiloVerdeClaro(monitor, rdp, totalClientes);
 
     /** Elegimos la politica deaseada */
     boolean balanceada = false;
     Politica politica = new Politica(balanceada, hilo3, hilo2, hilo6, hilo7);
     monitor.setPolitica(politica);
 
-    /** Inciamos todos los hilos de la red */
+    /** Inciamos todos los hilos de la Agencia de Viajes */
     long tiempoInicio = System.currentTimeMillis();
     hilo1.start();
     hilo2.start();

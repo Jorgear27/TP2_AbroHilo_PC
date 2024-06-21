@@ -7,9 +7,9 @@ public class HiloAzul extends Thread {
 
     private Monitor monitor;
 
-    private final int[] transiciones = {5};
+    private final int transicion = 5;
 
-    private final int[] demoras = {100};
+    private final int demora = 100;
 
     public HiloAzul (Monitor monitor, RdP red) {
         this.monitor = monitor;
@@ -19,19 +19,16 @@ public class HiloAzul extends Thread {
     @Override
     public void run() {
         while (true) {
-            for (int i = 0; i < transiciones.length; i++) {
-                if (monitor.fireTransition(transiciones[i])) {
-                    int[] vector_disparo = new int[12];
-                    vector_disparo[transiciones[i]] = 1;
+            if (monitor.fireTransition(transicion)) {
+                int[] vector_disparo = new int[12];
+                vector_disparo[transicion] = 1;
 
-                    try {
-                        sleep(demoras[i]); // demora de la transicion
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                try {
+                    sleep(demora); // demora de la transicion
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }
-
         }
     }
 }
