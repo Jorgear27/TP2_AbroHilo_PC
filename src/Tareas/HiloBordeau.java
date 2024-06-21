@@ -15,7 +15,6 @@ public class HiloBordeau extends Thread {
 
     private final int totalClientes = 186;
 
-
     public HiloBordeau (Monitor monitor, RdP red) {
         this.monitor = monitor;
         this.setName("Hilo Bordeau");
@@ -31,9 +30,6 @@ public class HiloBordeau extends Thread {
                     int[] vector_disparo = new int[12];
                     vector_disparo[transiciones[i]] = 1;
 
-                    //System.out.println(Thread.currentThread().getName()+": T" + transiciones[i] + " disparada");
-                    //red.actualizarRdP(vector_disparo);
-
                     if (i == 0) {
                         clientesIngresados++;
                     }
@@ -46,13 +42,12 @@ public class HiloBordeau extends Thread {
                 }
             }
 
+            // Si se llega al total de clientes, se interrumpe el hilo
             if (clientesIngresados == totalClientes) {
                 flag = false;
                 interrupt();
                 System.out.println("NO SE ACEPTA EL INGRESO DE MAS CLIENTES");
             }
         }
-
     }
-
 }

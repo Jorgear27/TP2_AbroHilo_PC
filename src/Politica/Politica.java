@@ -1,66 +1,78 @@
 package Politica;
-
+import Tareas.HiloVioleta;
+import Tareas.HiloAmarillo;
+import Tareas.HiloRojo;
+import Tareas.HiloNaranja;
 import java.util.Random;
 
 public class Politica {
-    private boolean balanceada;
-    private Random random;
 
-    public Politica(boolean balanceada) { // True si queremos politica balanceada, False si queremos politica priorizada
+    private boolean balanceada; // True si queremos politica balanceada, False si queremos politica priorizada
+
+    private HiloVioleta hiloVioleta;
+    private HiloAmarillo hiloAmarillo;
+    private HiloNaranja hiloNaranja;
+    private HiloRojo hiloRojo;
+
+    public Politica(boolean balanceada, HiloVioleta hiloVioleta, HiloAmarillo hiloAmarillo, HiloNaranja hiloNaranja, HiloRojo hiloRojo) {
         this.balanceada = balanceada;
-        random = new Random();
+        this.hiloAmarillo = hiloAmarillo;
+        this.hiloNaranja = hiloNaranja;
+        this.hiloRojo = hiloRojo;
+        this.hiloVioleta = hiloVioleta;
     }
 
     public int cual(int[] transicionesPosibles) { //Tengo que pasarle el vector de disparos posibles y me devuelve el disparo a realizar
-
+    
 
         if (balanceada) { // Si es balanceada elegimos c/u con un 50% de probabilidad
-
-                // Conflicto que decide entre los agentes de la plaza P6 (T2) y P7 (T3)
-                if (transicionesPosibles[2] == 1 && transicionesPosibles[3] == 1) {
-                    int binaryValue = random.nextInt(2);
-                    if (binaryValue == 1) {
-                        return 2;
-                    } else {
-                        return 3;
-                    }
-                }
-
-                // Conflicto que decide entre los agentes de la plaza P11 (T6) y P12 (T7)
-                if(transicionesPosibles[6] == 1 && transicionesPosibles[7] == 1) {
-                    int binaryValue = random.nextInt(2);
-                    if (binaryValue == 1) {
-                        return 6;
-                    } else {
-                        return 7;
-                    }
-                }
-        } else { // Si no es balanceada, elegimos c/u con un 75% de probabilidad
-
+    
             // Conflicto que decide entre los agentes de la plaza P6 (T2) y P7 (T3)
-                if (transicionesPosibles[2] == 1 && transicionesPosibles[3] == 1) {
-                    int randomValue = random.nextInt(100);
-                    int binaryValue = (randomValue < 75) ? 1 : 0;
-
-                    if (binaryValue == 1) {
-                        return 2;
-                    } else {
-                        return 3;
+            if (transicionesPosibles[2] == 1 && transicionesPosibles[3] == 1) {
+                if(hiloAmarillo.getVentasP6() < hiloVioleta.getVentasP7()){
+                    return 2;
                     }
-                }
-                // Conflicto que decide entre los agentes de la plaza P11 (T6) y P12 (T7)
-                if (transicionesPosibles[6] == 1 && transicionesPosibles[7] == 1) {
-                    int randomValue = random.nextInt(100);
-                    int binaryValue = (randomValue < 80) ? 1 : 0;
-
-                    if (binaryValue == 1) {
-                        return 6;
-                    } else {
-                        return 7;
+                else {
+                    return 3;
                     }
-                }
+            }
+    
+            // Conflicto que decide entre los agentes de la plaza P11 (T6) y P12 (T7)
+            if(transicionesPosibles[6] == 1 && transicionesPosibles[7] == 1) {
+                if(hiloNaranja.getConfirmadas() < hiloRojo.getCanceladas()){
+                    return 6;
+                    }
+                else {
+                    return 7;
+                    }
+            }
         }
 
+        //PRIORIZADA
+        else { // Si no es balanceada, elegimos c/u con un 75% de probabilidad
+    
+            // Conflicto que decide entre los agentes de la plaza P6 (T2) y P7 (T3)
+            if (transicionesPosibles[2] == 1 && transicionesPosibles[3] == 1) {
+                int aux1 = hiloAmarillo.getVentasP6() + hiloVioleta.getVentasP7();
+                if(hiloAmarillo.getVentasP6() <= aux1 * 0.75){
+                    return 2;
+                    }
+                else {
+                    return 3;
+                }
+            }
+
+            // Conflicto que decide entre los agentes de la plaza P11 (T6) y P12 (T7). Elije T6 el 80%
+            if(transicionesPosibles[6] == 1 && transicionesPosibles[7] == 1) {
+                int aux2 = hiloNaranja.getConfirmadas()+hiloRojo.getCanceladas();
+
+                if(hiloNaranja.getConfirmadas() <= (aux2 * 0.8)){
+                    return 6;
+                } else {
+                    return 7;
+                }
+            }
+        }
 
         //Si no hay conflictos, elegimos una transicion aleatoria
         int cual;
@@ -71,8 +83,11 @@ public class Politica {
                 flag = false;
             }
         } while (flag);
-
+    
         return cual;
     }
-
+    
+    public boolean isBalanceada(){
+        return balanceada;
+    }
 }

@@ -12,12 +12,9 @@ public class HiloVerde extends Thread {
     private final int[] demoras = {100};
 
     public HiloVerde (Monitor monitor, RdP red) {
-
         this.monitor = monitor;
         this.setName("Hilo Verde");
     }
-
-
 
     @Override
     public void run() {
@@ -26,9 +23,6 @@ public class HiloVerde extends Thread {
                 if (monitor.fireTransition(transiciones[i])) {
                     int[] vector_disparo = new int[12];
                     vector_disparo[transiciones[i]] = 1;
-
-                    //System.out.println(Thread.currentThread().getName()+": T" + transiciones[i] + " disparada");
-                    //red.actualizarRdP(vector_disparo);
 
                     try {
                         sleep(demoras[i]); // demora de la transicion

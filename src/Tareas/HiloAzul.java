@@ -14,7 +14,6 @@ public class HiloAzul extends Thread {
     public HiloAzul (Monitor monitor, RdP red) {
         this.monitor = monitor;
         this.setName("Hilo Azul");
-
     }
 
     @Override
@@ -24,9 +23,6 @@ public class HiloAzul extends Thread {
                 if (monitor.fireTransition(transiciones[i])) {
                     int[] vector_disparo = new int[12];
                     vector_disparo[transiciones[i]] = 1;
-
-                    //System.out.println(Thread.currentThread().getName()+": T" + transiciones[i] + " disparada");
-                    //red.actualizarRdP(vector_disparo);
 
                     try {
                         sleep(demoras[i]); // demora de la transicion

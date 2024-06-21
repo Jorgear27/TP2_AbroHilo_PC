@@ -3,12 +3,12 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class NewLog {
+public class Log {
 
-    BufferedWriter writer;
+    private BufferedWriter writer;
     private String nombre;
 
-    public NewLog(String nombre) {
+    public Log(String nombre) {
         this.nombre = nombre;
         try {
             writer = new BufferedWriter(new FileWriter(nombre, false));

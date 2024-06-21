@@ -11,16 +11,13 @@ public class HiloRojo extends Thread {
 
     private final int[] transiciones = {7, 8};
 
-    private final int[] demoras = {0, 100};
+    private final int[] demoras_balanceadas = {0, 100};
+    private final int[] demoras_desbalanceadas = {0, 277};
 
     public HiloRojo (Monitor monitor, RdP red) {
         this.monitor = monitor;
         this.setName("Hilo Rojo");
         this.canceladas = 0;
-    }
-
-    public int getCanceladas() {
-        return canceladas;
     }
 
     @Override
@@ -33,11 +30,12 @@ public class HiloRojo extends Thread {
                     int[] vector_disparo = new int[12];
                     vector_disparo[transiciones[i]] = 1;
 
-                    //System.out.println(Thread.currentThread().getName()+": T" + transiciones[i] + " disparada");
-                    //red.actualizarRdP(vector_disparo);
-
                     try {
-                        sleep(demoras[i]); // demora de la transicion
+                        if(monitor.getPolitica().isBalanceada()){
+                            sleep(demoras_balanceadas[i]);
+                        }else{
+                            sleep(demoras_desbalanceadas[i]);
+                        }
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -46,5 +44,9 @@ public class HiloRojo extends Thread {
             }
             canceladas++;
         }
+    }
+
+    public int getCanceladas() {
+        return canceladas;
     }
 }

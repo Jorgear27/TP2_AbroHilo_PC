@@ -5,7 +5,6 @@ import RedPetri.RdP;
 
 public class HiloVerdeClaro extends Thread {
 
-
     private Monitor monitor;
 
     private final int[] transiciones = {11};
@@ -31,9 +30,6 @@ public class HiloVerdeClaro extends Thread {
                     int[] vector_disparo = new int[12];
                     vector_disparo[transiciones[i]] = 1;
 
-                    //System.out.println(Thread.currentThread().getName()+": T" + transiciones[i] + " disparada");
-                    //red.actualizarRdP(vector_disparo);
-
                     clientesAtendidos++;
 
                     try {
@@ -43,6 +39,8 @@ public class HiloVerdeClaro extends Thread {
                     }
                 }
             }
+
+            // Si ya se atendieron a todos los clientes, se interrumpe el hilo
             if (clientesAtendidos == totalClientes) {
                 flag = false;
                 interrupt();
@@ -50,5 +48,4 @@ public class HiloVerdeClaro extends Thread {
             }
         }
     }
-
 }

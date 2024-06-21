@@ -2,14 +2,14 @@ package GestorMonitor;
 
 import java.util.concurrent.Semaphore;
 import Cola.Cola;
-import LOG.NewLog;
-import Politica.Politica2;
+import LOG.Log;
+import Politica.Politica;
 import RedPetri.RdP;
 
 
 public class Monitor implements MonitorInterfaz {
 
-    private Politica2 politica;
+    private Politica politica;
 
     private final Semaphore mutex = new Semaphore(1, true);
 
@@ -19,16 +19,21 @@ public class Monitor implements MonitorInterfaz {
 
     private RdP rdp;
 
-    private NewLog logger;
+    private Log logger;
 
     public Monitor(RdP rdp) {
         k = false;
         this.rdp = rdp;
-        logger = new NewLog("NewLog.txt");
+        logger = new Log("Log.txt");
     }
 
-    public void setPolitica(Politica2 politica) {
+    public void setPolitica(Politica politica) {
         this.politica = politica;
+    }
+
+
+    public Politica getPolitica() {
+        return politica;
     }
 
     @Override
