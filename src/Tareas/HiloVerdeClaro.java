@@ -15,7 +15,7 @@ public class HiloVerdeClaro extends Thread {
 
     private int totalClientes;
 
-    public HiloVerdeClaro (Monitor monitor, RdP red, int totalClientes) {
+    public HiloVerdeClaro (Monitor monitor, int totalClientes) {
         this.monitor = monitor;
         this.clientesAtendidos = 0;
         this.setName("Hilo VerdeClaro");
@@ -24,21 +24,23 @@ public class HiloVerdeClaro extends Thread {
 
     @Override
     public void run() {
+
         while (clientesAtendidos < totalClientes) {
+
             if (monitor.fireTransition(transicion)) {
-                int[] vector_disparo = new int[12];
-                vector_disparo[transicion] = 1;
 
                 clientesAtendidos++;
 
                 try {
-                    sleep(demora); // demora de la transicion
+                    sleep(demora);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
         }
-        // Si ya se atendieron a todos los clientes, se interrumpe el hil
+
+        // Si ya se atendieron a todos los clientes, termina la ejecucion del hilo
         System.out.println("PROCESO DE ATENCION DE RESERVAS FINALIZADO");
+
     }
 }

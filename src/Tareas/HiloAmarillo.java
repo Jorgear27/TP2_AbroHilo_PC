@@ -13,7 +13,7 @@ public class HiloAmarillo extends Thread {
 
     private final int demora = 0;
 
-    public HiloAmarillo (Monitor monitor, RdP red) {
+    public HiloAmarillo (Monitor monitor) {
         this.monitor = monitor;
         this.setName("Hilo Amarillo");
         this.ventasP6 = 0;
@@ -24,11 +24,8 @@ public class HiloAmarillo extends Thread {
         while (true) {
             if (monitor.fireTransition(transicion)) {
 
-                int[] vector_disparo = new int[12];
-                vector_disparo[transicion] = 1;
-
                 try {
-                    sleep(demora); // demora de la transicion
+                    sleep(demora);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

@@ -24,7 +24,7 @@ public class Monitor implements MonitorInterfaz {
     public Monitor(RdP rdp) {
         k = false;
         this.rdp = rdp;
-        logger = new Log("Log.txt");
+        logger = new Log("Log_Transiciones.txt");
     }
 
     public void setPolitica(Politica politica) {
@@ -39,58 +39,60 @@ public class Monitor implements MonitorInterfaz {
     @Override
     public boolean fireTransition(int transicion) {
 
-        try { // intentamos agarrar el mutex para entrar al monitor
-            //System.out.println("Voy a intentar agarrar el mutex " + Thread.currentThread().getName() + ": T" + transicion);
-            mutex.acquire(); //Si no hay nadie en la cola de espera Ep, tomo el recurso
-            //System.out.println("Obtuve el mutex " + Thread.currentThread().getName());
+        try { // El hilo intenta tomar el mutex para entrar al monitor
+
+            mutex.acquire(); // Si el mutex no esta disponible, el hilo se agrega a una cola justa que llamaremos cola E
+
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
         k = true;
+
         while (k) {
+
             int[] vector_disparo = new int[12];
             vector_disparo[transicion] = 1;
 
-            k = rdp.disparoPosible(vector_disparo);  // le preguntamos a la red de petri si puede dispararse, vuelve con k actualizado
+            k = rdp.disparoPosible(vector_disparo);  // Si la red de Petri puede disparar esa transicion, k es true
 
             if (k) {
-                rdp.actualizarRdP(vector_disparo);
+
+                rdp.actualizarRdP(vector_disparo);  // Realizamos el disparo efectivo de la transicion
                 logger.logTransition(transicion);
 
-                int[] sensibilizadas = rdp.getTransicionesSensibilizadas(); // Pone un 1 en transiciones que pueden dispararse
-                int[] Tesperando = colaW.quienesEstan();                    // Un array con todas las transiciones esperando
-                int[] Tposibles = new int[sensibilizadas.length];           // multiplica ambas y pone un uno si puede y quiere dispararse
+                int[] sensibilizadas = rdp.getTransicionesSensibilizadas(); // Vector con un 1 en transiciones que pueden dispararse
+                int[] Tesperando = colaW.quienesEstan();                    // Vector con las transiciones esperando a la variable de condicion (cola W)
+                int[] Tposibles = new int[sensibilizadas.length];           // Vector con las transiciones que estaban esperando en cola W y podrian dispararse con el nuevo marcado
 
-                // AND logico entre sensibilizadas y Tesperando
                 for (int i = 0; i < sensibilizadas.length; i++) {
-                    Tposibles[i] = sensibilizadas[i] * Tesperando[i];
+                    Tposibles[i] = sensibilizadas[i] * Tesperando[i]; // AND logico entre sensibilizadas y Tesperando
+
                 }
 
-                if (hayTransicionesPosibles(Tposibles)) { //m<>0
-                    int disparonuevo = politica.cual(Tposibles); //politica de disparo
-                    //System.out.println("Despierto a la transicion: " + disparonuevo);
-                    // notificar al hilo correspondiente y lo saca de la cola
+                if (hayTransicionesPosibles(Tposibles)) {
+
+                    int disparonuevo = politica.cual(Tposibles); // Devuelve la transicion del hilo que despertaremos
                     colaW.despertar(disparonuevo);
-                    return true; //el true fue que se pudo disparar la transicion y me voy del monitor y sigue el que desperte
-                } else {  //m==0
-                    k = false;
-                    //System.out.println(Thread.currentThread().getName() + ": No encontre a nadie en la cola de recursos, asi que pongo a k en falso");
+                    return true; // El hilo señalizador sale de monitor, habiendo disparado una transicion y despertando un hilo en espera
+
+                } else {
+                    k = false;  // El nuevo marcado generado por el hilo señalizador no sensibilizo ninguna transicion de la cola W. Aun no sale del monitor.
                 }
-            } else {
-                //System.out.println(Thread.currentThread().getName() + " No pude disparar mi transicion: " + transicion + " asi que libero el mutex y me voy a la cola de recursos ");
+
+            } else { // No es posible el disparo por el marcado de la red
+
                 mutex.release();
                 colaW.entrar(transicion);
-                //System.out.println(Thread.currentThread().getName() + ": Me desperte");
+
             }
         }
         mutex.release();
-        //System.out.println(Thread.currentThread().getName() +": Se rompio el while y libero el mutex y me voy");
         return true;
-}
+    }
 
     private boolean hayTransicionesPosibles(int [] Tposibles) {
-        for (int i = 0; i < Tposibles.length; i++) {
+        for(int i = 0; i < Tposibles.length; i++) {
             if (Tposibles[i]==1){
                 return true;
             }

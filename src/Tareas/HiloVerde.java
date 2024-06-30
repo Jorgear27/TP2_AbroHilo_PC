@@ -11,20 +11,20 @@ public class HiloVerde extends Thread {
 
     private final int demora = 100;
 
-    public HiloVerde (Monitor monitor, RdP red) {
+    public HiloVerde (Monitor monitor) {
         this.monitor = monitor;
         this.setName("Hilo Verde");
     }
 
     @Override
     public void run() {
+
         while (true) {
+
             if (monitor.fireTransition(transicion)) {
-                int[] vector_disparo = new int[12];
-                vector_disparo[transicion] = 1;
 
                 try {
-                    sleep(demora); // demora de la transicion
+                    sleep(demora);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

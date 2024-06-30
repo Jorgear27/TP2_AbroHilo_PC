@@ -5,12 +5,9 @@ import java.util.concurrent.Semaphore;
 public class Cola {
     private int[] transicionesEsperando;
 
-    //private Thread[] hilosEsperando;
     private Semaphore[] hilosEsperando;
 
     private final int cantidadTransiciones = 12;
-
-    private final Object lock = new Object();
 
     public Cola() {
         this.transicionesEsperando = new int[cantidadTransiciones];
@@ -18,14 +15,15 @@ public class Cola {
     }
 
     public void entrar(int transicion) {
-        transicionesEsperando[transicion] = 1;  // pone un 1 en la transicion que esta esperando
+
+        transicionesEsperando[transicion] = 1;  // Pone un 1 en la transicion que esta esperando
         hilosEsperando[transicion] = new Semaphore(0);
+
         try {
             hilosEsperando[transicion].acquire();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        //hilosEsperando[transicion] = thread;    // al mismo lugar que la transicion pone el hilo que esta esperando
     }
 
     public boolean estaVacia(){
@@ -44,6 +42,5 @@ public class Cola {
     public void despertar(int transicion) {
         transicionesEsperando[transicion] = 0;
         hilosEsperando[transicion].release();
-        //return hilosEsperando[transicion];
     }
 }

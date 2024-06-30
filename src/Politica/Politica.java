@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class Politica {
 
-    private boolean balanceada; // True si queremos politica balanceada, False si queremos politica priorizada
+    private boolean balanceada;
 
     private HiloVioleta hiloVioleta;
     private HiloAmarillo hiloAmarillo;
@@ -22,22 +22,24 @@ public class Politica {
         this.hiloVioleta = hiloVioleta;
     }
 
-    public int cual(int[] transicionesPosibles) { //Tengo que pasarle el vector de disparos posibles y me devuelve el disparo a realizar
+    public int cual(int[] transicionesPosibles) {
     
 
         if (balanceada) { // Si es balanceada elegimos c/u con un 50% de probabilidad
     
-            // Conflicto que decide entre los agentes de la plaza P6 (T2) y P7 (T3)
+            // Politica que resuelve el conflicto entre los agentes de la plaza P6 (T2) y P7 (T3)
+
             if (transicionesPosibles[2] == 1 && transicionesPosibles[3] == 1) {
                 if(hiloAmarillo.getVentasP6() < hiloVioleta.getVentasP7()){
                     return 2;
                     }
-                else {
+                else{
                     return 3;
                     }
             }
     
-            // Conflicto que decide entre los agentes de la plaza P11 (T6) y P12 (T7)
+            // Politica que resuelve el conflicto entre los agentes de la plaza P11 (T6) y P12 (T7)
+
             if(transicionesPosibles[6] == 1 && transicionesPosibles[7] == 1) {
                 if(hiloNaranja.getConfirmadas() < hiloRojo.getCanceladas()){
                     return 6;
@@ -49,9 +51,9 @@ public class Politica {
         }
 
         //PRIORIZADA
-        else { // Si no es balanceada, elegimos c/u con un 75% de probabilidad
+        else {
     
-            // Conflicto que decide entre los agentes de la plaza P6 (T2) y P7 (T3)
+            // Politica que resuelve el conflicto entre los agentes de la plaza P6 (T2) y P7 (T3)
             if (transicionesPosibles[2] == 1 && transicionesPosibles[3] == 1) {
                 int aux1 = hiloAmarillo.getVentasP6() + hiloVioleta.getVentasP7();
                 if(hiloAmarillo.getVentasP6() <= aux1 * 0.75){
@@ -62,7 +64,7 @@ public class Politica {
                 }
             }
 
-            // Conflicto que decide entre los agentes de la plaza P11 (T6) y P12 (T7). Elije T6 el 80%
+            // Politica que resuelve el conflicto entre los agentes de la plaza P11 (T6) y P12 (T7)
             if(transicionesPosibles[6] == 1 && transicionesPosibles[7] == 1) {
                 int aux2 = hiloNaranja.getConfirmadas()+hiloRojo.getCanceladas();
 
@@ -74,7 +76,7 @@ public class Politica {
             }
         }
 
-        //Si no hay conflictos, elegimos una transicion aleatoria
+        // Si no hay conflictos, elegimos una transicion aleatoria
         int cual;
         boolean flag = true;
         do {

@@ -16,11 +16,8 @@ public class RdP {
 
     private final int[][] MatrizIncidencia;               // columnas = numero de transiciones = 12
                                                           // filas = numero de plazas = 15
-    private HashMap<int[],Date> historialDisparos;
-
 
     public RdP() {
-        historialDisparos = new HashMap<>();
 
         Marcado = new int[]{5, 1, 0, 0, 5, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0};
 
@@ -44,7 +41,7 @@ public class RdP {
 
         };
 
-        setTransicionesSensibilizadas(sensibilizar()); // TransicionesSensibilizadas = new int[]{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        setTransicionesSensibilizadas(sensibilizar()); // sensibilizar() devolvera {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     }
 
     public int[] getMarcado() {
@@ -53,14 +50,6 @@ public class RdP {
 
     public int[] getTransicionesSensibilizadas() {
         return TransicionesSensibilizadas;
-    }
-
-    public int getcantidadTransiciones() {
-        return cantidadTransiciones;
-    }
-
-    public int getcantidadPlazas() {
-        return cantidadPlazas;
     }
 
     private int[] ecuacionFundamental(int[] disparo){
@@ -99,7 +88,7 @@ public class RdP {
 
         int[] nuevoMarcado = ecuacionFundamental(disparo);
 
-        // Vemos si encontramos uno negativo
+        // Si encontramos un valor negativo en el resultado, el disparo no es posible
         for (int i = 0; i < nuevoMarcado.length; i++) {
             if (nuevoMarcado[i] < 0) {
                 return false;
@@ -113,59 +102,39 @@ public class RdP {
 
         int[] aux = new int[cantidadTransiciones];
 
-        // Check transicion T0
         if (Marcado[0] >= 1 && Marcado[4] >= 1)
             aux[0] = 1;
 
-        // Check transicion T1
         if (Marcado[2] == 1)
             aux[1] = 1;
 
-        // Check transicion T2
         if (Marcado[3] >= 1 && Marcado[6] == 1)
             aux[2] = 1;
 
-
-        // Check transicion T3
         if (Marcado[3] >= 1 && Marcado[7] == 1)
             aux[3] = 1;
 
-
-        // Check transicion T4
         if (Marcado[8] == 1)
             aux[4] = 1;
 
-
-        // Check transicion T5
         if (Marcado[5] == 1)
             aux[5] = 1;
 
-
-        // Check transicion T6
         if (Marcado[9] >= 1 && Marcado[10] == 1)
             aux[6] = 1;
 
-
-        // Check transicion T7
         if (Marcado[9] >= 1 && Marcado[10] == 1)
             aux[7] = 1;
 
-        // Check transicion T8
         if (Marcado[12] == 1)
             aux[8] = 1;
 
-
-        // Check transicion T9
         if (Marcado[11] == 1)
             aux[9] = 1;
 
-
-            // Check transition T10
         if (Marcado[13] == 1)
             aux[10] = 1;
 
-
-        // Check transition T11
         if (Marcado[14] == 1)
             aux[11] = 1;
 
@@ -181,16 +150,11 @@ public class RdP {
     }
 
 
-    public void actualizarRdP (int[] disparo) { // deberia recibir un int
+    public void actualizarRdP (int[] disparo) {
 
-        if (disparoPosible(disparo)) {
 
-            Date date = new Date();
-            historialDisparos.put(disparo, date);
-
-            int[] m2 = ecuacionFundamental(disparo);
-
-            setMarcado(m2);
+            // Actualizamos el marcado
+            setMarcado(ecuacionFundamental(disparo));
 
             int transicion=0;
             for (int i = 0; i < disparo.length; i++) {
@@ -207,10 +171,8 @@ public class RdP {
                 System.out.println(Arrays.toString(getMarcado()));
             }
 
+            // Definimos la nuevas transiciones sensibilizadas con el nuevo marcado
             setTransicionesSensibilizadas(sensibilizar());
-        } else {
-            System.out.println("No es posible realizar este disparo");
-        }
     }
 
 }

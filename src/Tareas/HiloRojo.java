@@ -14,7 +14,7 @@ public class HiloRojo extends Thread {
     private final int[] demoras_balanceadas = {0, 100};
     private final int[] demoras_desbalanceadas = {0, 277};
 
-    public HiloRojo (Monitor monitor, RdP red) {
+    public HiloRojo (Monitor monitor) {
         this.monitor = monitor;
         this.setName("Hilo Rojo");
         this.canceladas = 0;
@@ -22,13 +22,12 @@ public class HiloRojo extends Thread {
 
     @Override
     public void run() {
+
         while (true) {
+
             for (int i = 0; i < transiciones.length; i++) {
 
                 if (monitor.fireTransition(transiciones[i])) {
-
-                    int[] vector_disparo = new int[12];
-                    vector_disparo[transiciones[i]] = 1;
 
                     try {
                         if(monitor.getPolitica().isBalanceada()){

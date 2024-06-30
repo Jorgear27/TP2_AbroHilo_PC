@@ -13,7 +13,7 @@ public class HiloVioleta extends Thread {
 
     private final int demora = 0;
 
-    public HiloVioleta (Monitor monitor, RdP red) {
+    public HiloVioleta (Monitor monitor) {
         this.monitor = monitor;
         this.setName("Hilo Violeta");
         this.ventasP7 = 0;
@@ -21,11 +21,10 @@ public class HiloVioleta extends Thread {
 
     @Override
     public void run() {
+
         while (true) {
 
             if (monitor.fireTransition(transicion)) {
-                int[] vector_disparo = new int[12];
-                vector_disparo[transicion] = 1;
 
                 try {
                     sleep(demora); // demora de la transicion
