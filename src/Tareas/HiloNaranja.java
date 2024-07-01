@@ -1,7 +1,6 @@
 package Tareas;
 
 import GestorMonitor.Monitor;
-import RedPetri.RdP;
 
 public class HiloNaranja extends Thread {
 
@@ -10,9 +9,6 @@ public class HiloNaranja extends Thread {
     private Monitor monitor;
 
     private final int[] transiciones = {6, 9, 10};
-
-    private final int[] demoras_desbalanceadas = {0, 54, 44};
-    private final int[] demoras_balanceadas = {0, 100, 100 };
 
     public HiloNaranja (Monitor monitor) {
         this.monitor = monitor;
@@ -24,21 +20,10 @@ public class HiloNaranja extends Thread {
     public void run() {
 
         while (true) {
-
-            for (int i = 0; i < transiciones.length; i++) {
-
+            int i = 0;
+            while (i < transiciones.length) {
                 if (monitor.fireTransition(transiciones[i])) {
-
-                    try {
-                        if(monitor.getPolitica().isBalanceada()){
-                            sleep(demoras_balanceadas[i]);
-                        }else{
-                            sleep(demoras_desbalanceadas[i]);
-                        }
-                    }
-                    catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                    i++;
                 }
             }
             confirmadas++;

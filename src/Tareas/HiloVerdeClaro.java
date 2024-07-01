@@ -1,15 +1,12 @@
 package Tareas;
 
 import GestorMonitor.Monitor;
-import RedPetri.RdP;
 
 public class HiloVerdeClaro extends Thread {
 
     private Monitor monitor;
 
     private final int transicion = 11;
-
-    private final int demora = 0;
 
     private int clientesAtendidos;
 
@@ -30,12 +27,6 @@ public class HiloVerdeClaro extends Thread {
             if (monitor.fireTransition(transicion)) {
 
                 clientesAtendidos++;
-
-                try {
-                    sleep(demora);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
             }
         }
 

@@ -29,7 +29,7 @@ public class Main {
 
     //Elegimos la politica deaseada
 
-    boolean balanceada = true;
+    boolean balanceada = false;
 
     Politica politica = new Politica(balanceada, hilo3, hilo2, hilo6, hilo7);
     monitor.setPolitica(politica);

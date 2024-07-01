@@ -6,6 +6,8 @@ import LOG.Log;
 import Politica.Politica;
 import RedPetri.RdP;
 
+import static java.lang.Thread.currentThread;
+
 
 public class Monitor implements MonitorInterfaz {
 
@@ -21,7 +23,10 @@ public class Monitor implements MonitorInterfaz {
 
     private Log logger;
 
+    private static boolean hayDurmiendo;
+
     public Monitor(RdP rdp) {
+        hayDurmiendo = false;
         k = false;
         this.rdp = rdp;
         logger = new Log("Log_Transiciones.txt");
@@ -40,9 +45,9 @@ public class Monitor implements MonitorInterfaz {
     public boolean fireTransition(int transicion) {
 
         try { // El hilo intenta tomar el mutex para entrar al monitor
-
+            System.out.println("Intento Agarrar Mutex T"+ transicion);
             mutex.acquire(); // Si el mutex no esta disponible, el hilo se agrega a una cola justa que llamaremos cola E
-
+            System.out.println("Agarre Mutex T"+ transicion);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -56,8 +61,36 @@ public class Monitor implements MonitorInterfaz {
 
             k = rdp.disparoPosible(vector_disparo);  // Si la red de Petri puede disparar esa transicion, k es true
 
-            if (k) {
+            //chequeo time
+            boolean ventana = rdp.estaEnVentanaTemporal(transicion, politica);
+            if (!ventana) { //el tiempo transcurrido es menor al alfa
+                System.out.println("Todavia no cumpli con el tiempo de espera T"+ transicion);
 
+                /**
+                if (hayDurmiendo){
+                    System.out.println("Ya habia un hilo durmiendo, me voy a la cola");
+                    k = false;
+                } else {*/
+
+                    mutex.release();
+                    //hayDurmiendo = true;
+                    try {
+                        int tiempoRestante = rdp.getTiempoRestante(transicion, getPolitica());
+                        //int tiempoRestante = 100;
+                        System.out.println("Me voy a dormir T"+ transicion+ " por "+ tiempoRestante+ " milisegundos");
+
+                        currentThread().sleep(tiempoRestante);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    //hayDurmiendo = false;
+                    System.out.println("Me desperte y me voy T"+ transicion);
+                    return false;
+                //}
+            }
+
+            if (k) {
+                System.out.println("Me disparo T"+ transicion);
                 rdp.actualizarRdP(vector_disparo);  // Realizamos el disparo efectivo de la transicion
                 logger.logTransition(transicion);
 
@@ -73,15 +106,17 @@ public class Monitor implements MonitorInterfaz {
                 if (hayTransicionesPosibles(Tposibles)) {
 
                     int disparonuevo = politica.cual(Tposibles); // Devuelve la transicion del hilo que despertaremos
+                    System.out.println("Me identifico como T"+ transicion+ " y despierto a T"+ disparonuevo);
                     colaW.despertar(disparonuevo);
                     return true; // El hilo señalizador sale de monitor, habiendo disparado una transicion y despertando un hilo en espera
 
                 } else {
+                    System.out.println("No hay nadie para disparar me voy T"+ transicion);
                     k = false;  // El nuevo marcado generado por el hilo señalizador no sensibilizo ninguna transicion de la cola W. Aun no sale del monitor.
                 }
 
             } else { // No es posible el disparo por el marcado de la red
-
+                System.out.println("No me pude disparar, me voy a la cola de espera T"+ transicion);
                 mutex.release();
                 colaW.entrar(transicion);
 

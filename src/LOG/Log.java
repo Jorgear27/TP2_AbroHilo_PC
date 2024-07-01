@@ -17,7 +17,7 @@ public class Log {
         }
     }
 
-    public synchronized void logTransition(int transicion) {
+    public void logTransition(int transicion) {
         try {
             writer.write("T" + transicion);
             writer.flush();

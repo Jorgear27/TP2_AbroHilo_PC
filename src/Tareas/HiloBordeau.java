@@ -1,15 +1,12 @@
 package Tareas;
 
 import GestorMonitor.Monitor;
-import RedPetri.RdP;
 
 public class HiloBordeau extends Thread {
 
     private Monitor monitor;
 
     private final int[] transiciones = {0, 1};
-
-    private final int[] demoras = {0, 100};
 
     private int clientesIngresados;
 
@@ -26,18 +23,12 @@ public class HiloBordeau extends Thread {
     public void run() {
 
         while (clientesIngresados < totalClientes) {
+            int i = 0;
 
-            for (int i = 0; i < transiciones.length; i++) {
-
+            while (i < transiciones.length) {
                 if (monitor.fireTransition(transiciones[i])) {
-
                     if (i == 0) clientesIngresados++;
-
-                    try {
-                        sleep(demoras[i]);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                    i++;
                 }
             }
         }
