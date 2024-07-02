@@ -18,9 +18,7 @@ public class HiloVerde extends Thread {
 
         while (true) {
 
-            if (monitor.fireTransition(transicion)) {
-
-            }
+            monitor.fireTransition(transicion);
         }
     }
 }

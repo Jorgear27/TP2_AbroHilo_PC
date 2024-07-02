@@ -15,8 +15,8 @@ public class RdP {
 
     private long[] TiempoSensibilizado;
 
-    private final long[] TiempoVentanaBalanceado = {0, 100, 0, 0, 100, 100, 0, 0, 100, 100, 100, 0};
-    private final long[] TiempoVentanaDesbalanceado = {0, 100, 0, 0, 100, 100, 0, 0, 200, 100, 100, 0};
+    private final long[] TiempoVentanaBalanceado = {0, 130, 0, 0, 50, 50, 0, 0, 100, 60, 40, 0};
+    private final long[] TiempoVentanaDesbalanceado = {0, 130, 0, 0, 50, 50, 0, 0, 100, 60, 40, 0};
 
     private final int[][] MatrizIncidencia;               // columnas = numero de transiciones = 12
                                                           // filas = numero de plazas = 15
@@ -49,7 +49,8 @@ public class RdP {
 
         };
 
-        setTransicionesSensibilizadas(sensibilizar()); // sensibilizar() devolvera {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        int[] aux = sensibilizar();
+        setTransicionesSensibilizadas(aux); // sensibilizar() devolvera {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     }
 
     public int[] getMarcado() {
@@ -134,65 +135,65 @@ public class RdP {
 
         int[] aux = new int[cantidadTransiciones];
 
-        if (Marcado[0] >= 1 && Marcado[4] >= 1 ) {
+        if (Marcado[0] >= 1 && Marcado[1] == 1 && Marcado[4] >= 1) {
             aux[0] = 1;
-            if (TransicionesSensibilizadas[0] == 1) TiempoSensibilizado[0] = System.currentTimeMillis();
+            if (TransicionesSensibilizadas[0] != 1) TiempoSensibilizado[0] = System.currentTimeMillis();
         }
 
         if (Marcado[2] == 1){
             aux[1] = 1;
-            if (TransicionesSensibilizadas[1] == 1) TiempoSensibilizado[1] = System.currentTimeMillis();
+            if (TransicionesSensibilizadas[1] != 1) TiempoSensibilizado[1] = System.currentTimeMillis();
         }
 
         if (Marcado[3] >= 1 && Marcado[6] == 1){
             aux[2] = 1;
-            if (TransicionesSensibilizadas[2] == 1) TiempoSensibilizado[2] = System.currentTimeMillis();
+            if (TransicionesSensibilizadas[2] != 1) TiempoSensibilizado[2] = System.currentTimeMillis();
         }
 
         if (Marcado[3] >= 1 && Marcado[7] == 1 ){
             aux[3] = 1;
-            if (TransicionesSensibilizadas[3] == 1) TiempoSensibilizado[3] = System.currentTimeMillis();
+            if (TransicionesSensibilizadas[3] != 1) TiempoSensibilizado[3] = System.currentTimeMillis();
         }
 
         if (Marcado[8] == 1){
             aux[4] = 1;
-            if (TransicionesSensibilizadas[4] == 1) TiempoSensibilizado[4] = System.currentTimeMillis();
+            if (TransicionesSensibilizadas[4] != 1) TiempoSensibilizado[4] = System.currentTimeMillis();
         }
 
         if (Marcado[5] == 1){
             aux[5] = 1;
-            if (TransicionesSensibilizadas[5] == 1) TiempoSensibilizado[5] = System.currentTimeMillis();
+            if (TransicionesSensibilizadas[5] != 1) TiempoSensibilizado[5] = System.currentTimeMillis();
         }
 
         if (Marcado[9] >= 1 && Marcado[10] == 1){
             aux[6] = 1;
-            if (TransicionesSensibilizadas[6] == 1) TiempoSensibilizado[6] = System.currentTimeMillis();
+            if (TransicionesSensibilizadas[6] != 1) TiempoSensibilizado[6] = System.currentTimeMillis();
 
         }
 
         if (Marcado[9] >= 1 && Marcado[10] == 1){
             aux[7] = 1;
-            if (TransicionesSensibilizadas[7] == 1) TiempoSensibilizado[7] = System.currentTimeMillis();
+            if (TransicionesSensibilizadas[7] != 1) TiempoSensibilizado[7] = System.currentTimeMillis();
         }
 
         if (Marcado[12] == 1){
             aux[8] = 1;
-            if (TransicionesSensibilizadas[8] == 1) TiempoSensibilizado[8] = System.currentTimeMillis();
+            if (TransicionesSensibilizadas[8] != 1) TiempoSensibilizado[8] = System.currentTimeMillis();
         }
 
         if (Marcado[11] == 1){
             aux[9] = 1;
-            if (TransicionesSensibilizadas[9] == 1) TiempoSensibilizado[9] = System.currentTimeMillis();
+            if (TransicionesSensibilizadas[9] != 1) TiempoSensibilizado[9] = System.currentTimeMillis();
         }
 
         if (Marcado[13] == 1){
             aux[10] = 1;
-            if (TransicionesSensibilizadas[10] == 1) TiempoSensibilizado[10] = System.currentTimeMillis();
+            if (TransicionesSensibilizadas[10] != 1) TiempoSensibilizado[10] = System.currentTimeMillis();
         }
 
-        if (Marcado[14] == 1){
+        if (Marcado[14] >= 1){
             aux[11] = 1;
-            if (TransicionesSensibilizadas[11] == 1) TiempoSensibilizado[11] = System.currentTimeMillis();
+            if (TransicionesSensibilizadas[11] != 1) TiempoSensibilizado[11] = System.currentTimeMillis();
         }
 
         return aux;

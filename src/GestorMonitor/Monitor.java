@@ -61,16 +61,17 @@ public class Monitor implements MonitorInterfaz {
 
             k = rdp.disparoPosible(vector_disparo);  // Si la red de Petri puede disparar esa transicion, k es true
 
-            //chequeo time
-            boolean ventana = rdp.estaEnVentanaTemporal(transicion, politica);
-            if (!ventana) { //el tiempo transcurrido es menor al alfa
-                System.out.println("Todavia no cumpli con el tiempo de espera T"+ transicion);
+            if (k) {
+                //chequeo time
+                boolean ventana = rdp.estaEnVentanaTemporal(transicion, politica);
+                if (!ventana) { //el tiempo transcurrido es menor al alfa
+                    System.out.println("Todavia no cumpli con el tiempo de espera T"+ transicion);
 
-                /**
-                if (hayDurmiendo){
-                    System.out.println("Ya habia un hilo durmiendo, me voy a la cola");
-                    k = false;
-                } else {*/
+                    /**
+                     if (hayDurmiendo){
+                     System.out.println("Ya habia un hilo durmiendo, me voy a la cola");
+                     k = false;
+                     } else {*/
 
                     mutex.release();
                     //hayDurmiendo = true;
@@ -86,10 +87,9 @@ public class Monitor implements MonitorInterfaz {
                     //hayDurmiendo = false;
                     System.out.println("Me desperte y me voy T"+ transicion);
                     return false;
-                //}
-            }
+                    //}
+                }
 
-            if (k) {
                 System.out.println("Me disparo T"+ transicion);
                 rdp.actualizarRdP(vector_disparo);  // Realizamos el disparo efectivo de la transicion
                 logger.logTransition(transicion);
@@ -104,7 +104,6 @@ public class Monitor implements MonitorInterfaz {
                 }
 
                 if (hayTransicionesPosibles(Tposibles)) {
-
                     int disparonuevo = politica.cual(Tposibles); // Devuelve la transicion del hilo que despertaremos
                     System.out.println("Me identifico como T"+ transicion+ " y despierto a T"+ disparonuevo);
                     colaW.despertar(disparonuevo);

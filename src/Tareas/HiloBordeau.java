@@ -27,10 +27,10 @@ public class HiloBordeau extends Thread {
 
             while (i < transiciones.length) {
                 if (monitor.fireTransition(transiciones[i])) {
-                    if (i == 0) clientesIngresados++;
                     i++;
                 }
             }
+            clientesIngresados++;
         }
 
         // Si se llega al total de clientes, termina la ejecucion del hilo
