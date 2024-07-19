@@ -15,8 +15,8 @@ public class RdP {
 
     private long[] TiempoSensibilizado;
 
-    private final long[] TiempoVentanaBalanceado = {0, 130, 0, 0, 50, 50, 0, 0, 100, 60, 40, 0};
-    private final long[] TiempoVentanaDesbalanceado = {0, 130, 0, 0, 50, 50, 0, 0, 100, 60, 40, 0};
+    private final long[] TiempoVentanaBalanceado = {0, 100, 0, 0, 100, 100, 0, 0, 100, 50, 50, 0};
+    private final long[] TiempoVentanaDesbalanceado = {0, 130, 0, 0, 70, 70, 0, 0, 100, 50, 50, 0};
 
     private final int[][] MatrizIncidencia;               // columnas = numero de transiciones = 12
                                                           // filas = numero de plazas = 15

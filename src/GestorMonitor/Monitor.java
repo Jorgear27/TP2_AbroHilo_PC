@@ -62,7 +62,7 @@ public class Monitor implements MonitorInterfaz {
             k = rdp.disparoPosible(vector_disparo);  // Si la red de Petri puede disparar esa transicion, k es true
 
             if (k) {
-                //chequeo time
+                // chequeo time
                 boolean ventana = rdp.estaEnVentanaTemporal(transicion, politica);
                 if (!ventana) { //el tiempo transcurrido es menor al alfa
                     System.out.println("Todavia no cumpli con el tiempo de espera T"+ transicion);
@@ -77,7 +77,7 @@ public class Monitor implements MonitorInterfaz {
                     //hayDurmiendo = true;
                     try {
                         int tiempoRestante = rdp.getTiempoRestante(transicion, getPolitica());
-                        //int tiempoRestante = 100;
+
                         System.out.println("Me voy a dormir T"+ transicion+ " por "+ tiempoRestante+ " milisegundos");
 
                         currentThread().sleep(tiempoRestante);
