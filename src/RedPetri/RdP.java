@@ -21,6 +21,9 @@ public class RdP {
     private final int[][] MatrizIncidencia;               // columnas = numero de transiciones = 12
                                                           // filas = numero de plazas = 15
 
+
+    private int transicionDisparada;
+
     public RdP() {
 
         TransicionesSensibilizadas = new int[cantidadTransiciones];
@@ -60,6 +63,11 @@ public class RdP {
     public int[] getTransicionesSensibilizadas() {
         return TransicionesSensibilizadas;
     }
+
+    public int getTransicionDisparada(){
+        return transicionDisparada;
+    }
+
 
     private int[] ecuacionFundamental(int[] disparo){
 
@@ -215,14 +223,17 @@ public class RdP {
             // Actualizamos el marcado
             setMarcado(ecuacionFundamental(disparo));
 
-            int transicion=0;
+
             for (int i = 0; i < disparo.length; i++) {
                 if (disparo[i] == 1) {
-                    transicion = i;
+                    transicionDisparada = i;
                 }
             }
+
+
+
             if(invariantesPlaza()){
-                System.out.println("Se respetaron los invariantes de Plaza al disparar T"+ transicion);
+                System.out.println("Se respetaron los invariantes de Plaza al disparar T"+ transicionDisparada);
             }
 
             else{
@@ -233,6 +244,14 @@ public class RdP {
             // Definimos la nuevas transiciones sensibilizadas con el nuevo marcado
             int[] aux = sensibilizar();
             setTransicionesSensibilizadas(aux);
+
+
+
+
+
     }
+
+
+
 
 }

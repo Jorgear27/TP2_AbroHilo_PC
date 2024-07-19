@@ -2,6 +2,7 @@ import GestorMonitor.Monitor;
 import RedPetri.RdP;
 import Tareas.*;
 import Politica.Politica;
+import LOG.Log;
 
 import static java.lang.Thread.sleep;
 
@@ -13,6 +14,9 @@ public class Main {
 
     // Creamos el monitor
     Monitor monitor = new Monitor(rdp);
+
+
+    Log logger = new Log("Log_Transiciones.txt", rdp);
 
 
     int totalClientes = 186;
@@ -33,6 +37,8 @@ public class Main {
 
     Politica politica = new Politica(balanceada, hilo3, hilo2, hilo6, hilo7);
     monitor.setPolitica(politica);
+
+    logger.start();
 
     // Inciamos todos los hilos de la Agencia de Viajes
     long tiempoInicio = System.currentTimeMillis();

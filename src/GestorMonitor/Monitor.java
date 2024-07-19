@@ -2,7 +2,6 @@ package GestorMonitor;
 
 import java.util.concurrent.Semaphore;
 import Cola.Cola;
-import LOG.Log;
 import Politica.Politica;
 import RedPetri.RdP;
 
@@ -21,7 +20,7 @@ public class Monitor implements MonitorInterfaz {
 
     private RdP rdp;
 
-    private Log logger;
+
 
     private static boolean hayDurmiendo;
 
@@ -29,7 +28,6 @@ public class Monitor implements MonitorInterfaz {
         hayDurmiendo = false;
         k = false;
         this.rdp = rdp;
-        logger = new Log("Log_Transiciones.txt");
     }
 
     public void setPolitica(Politica politica) {
@@ -92,7 +90,6 @@ public class Monitor implements MonitorInterfaz {
 
                 System.out.println("Me disparo T"+ transicion);
                 rdp.actualizarRdP(vector_disparo);  // Realizamos el disparo efectivo de la transicion
-                logger.logTransition(transicion);
 
                 int[] sensibilizadas = rdp.getTransicionesSensibilizadas(); // Vector con un 1 en transiciones que pueden dispararse
                 int[] Tesperando = colaW.quienesEstan();                    // Vector con las transiciones esperando a la variable de condicion (cola W)
