@@ -79,7 +79,7 @@ public class Politica {
                 }
             }
         }
-/**
+
         // Si no hay conflictos, elegimos una transicion aleatoria
         int cual;
         boolean flag = true;
@@ -90,18 +90,11 @@ public class Politica {
             }
         } while (flag);
     
-        return cual;*/
-        for (int i =0; i < transicionesPosibles.length; i++){
-            if (transicionesPosibles[i] == 1 && i!= 6 && i!= 7){
-                System.out.println("Transicion elegida: "+ i);
-                return i;
-            }
-        }
-        if (transicionesPosibles[6] == 1){
-            System.out.println("Transicion elegida: 6");
-            return 6;
-        } else return 7;
+        return cual;
+
     }
+
+
     
     public boolean isBalanceada(){
         return balanceada;
