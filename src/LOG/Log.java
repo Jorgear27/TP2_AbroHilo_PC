@@ -11,17 +11,11 @@ public class Log extends Thread {
     private BufferedWriter writer;
     private String nombre;
 
-    //private int transicionUltima;
-
-    //private RdP rdp;
-
     private BlockingQueue<Integer> queue;
 
     public Log(String nombre, RdP rdp) {
         this.queue = rdp.getQueue();
         this.nombre = nombre;
-        //this.rdp = rdp;
-        //transicionUltima = 15;
         try {
             writer = new BufferedWriter(new FileWriter(nombre, false));
         } catch (IOException e) {
@@ -47,13 +41,6 @@ public class Log extends Thread {
             } catch (InterruptedException e) {
                 break;
             }
-            /*
-            int transicionDisparada = rdp.getTransicionDisparada();
-
-            if (transicionDisparada != transicionUltima) {
-                logTransition(transicionDisparada);
-                transicionUltima = transicionDisparada;
-            }*/
         }
     }
 }
