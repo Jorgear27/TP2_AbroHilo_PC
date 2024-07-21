@@ -2,8 +2,12 @@ package RedPetri;
 
 import java.util.Arrays;
 import Politica.Politica;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class RdP {
+
+    private BlockingQueue<Integer> queue = new LinkedBlockingQueue<>();
 
     private final int cantidadPlazas = 15;
 
@@ -15,8 +19,8 @@ public class RdP {
 
     private long[] TiempoSensibilizado;
 
-    private final long[] TiempoVentanaBalanceado = {0, 100, 0, 0, 100, 100, 0, 0, 100, 50, 50, 0};
-    private final long[] TiempoVentanaDesbalanceado = {0, 130, 0, 0, 70, 70, 0, 0, 100, 50, 50, 0};
+    private final long[] TiempoVentanaBalanceado = {0, 130, 0, 0, 70, 70, 0, 0, 50, 50, 50, 0};
+    private final long[] TiempoVentanaDesbalanceado = {0, 130, 0, 0, 90, 90, 0, 0, 40, 40, 40, 0};
 
     private final int[][] MatrizIncidencia;               // columnas = numero de transiciones = 12
                                                           // filas = numero de plazas = 15
@@ -86,8 +90,6 @@ public class RdP {
             aux[i] += Marcado[i];
         }
         return aux;
-
-
     }
 
     private boolean invariantesPlaza() {
@@ -219,39 +221,37 @@ public class RdP {
 
     public void actualizarRdP (int[] disparo) {
 
+        // Actualizamos el marcado
+        setMarcado(ecuacionFundamental(disparo));
 
-            // Actualizamos el marcado
-            setMarcado(ecuacionFundamental(disparo));
-
-
-            for (int i = 0; i < disparo.length; i++) {
-                if (disparo[i] == 1) {
-                    transicionDisparada = i;
-                }
+        for (int i = 0; i < disparo.length; i++) {
+            if (disparo[i] == 1) {
+                transicionDisparada = i;
             }
+        }
 
+        registrarTransicion(transicionDisparada);
 
+        if(invariantesPlaza()){
+            System.out.println("Se respetaron los invariantes de Plaza al disparar T"+ transicionDisparada);
+        }
 
-            if(invariantesPlaza()){
-                System.out.println("Se respetaron los invariantes de Plaza al disparar T"+ transicionDisparada);
-            }
+        else{
+            System.out.println("HUBO UN PROBLEMA. El marcado generado no respeta los invariantes de Plaza");
+            System.out.println(Arrays.toString(getMarcado()));
+        }
 
-            else{
-                System.out.println("HUBO UN PROBLEMA. El marcado generado no respeta los invariantes de Plaza");
-                System.out.println(Arrays.toString(getMarcado()));
-            }
-
-            // Definimos la nuevas transiciones sensibilizadas con el nuevo marcado
-            int[] aux = sensibilizar();
-            setTransicionesSensibilizadas(aux);
-
-
-
-
-
+        // Definimos la nuevas transiciones sensibilizadas con el nuevo marcado
+        int[] aux = sensibilizar();
+        setTransicionesSensibilizadas(aux);
     }
 
+    public BlockingQueue<Integer> getQueue() {
+        return queue;
+    }
 
-
-
+    // Vamos agregando las transiciones disparadas a la cola de transiciones disparadas
+    public void registrarTransicion(int transicion) {
+        queue.offer(transicion);
+    }
 }
