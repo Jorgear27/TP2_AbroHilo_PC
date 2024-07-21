@@ -60,19 +60,13 @@ public class Monitor implements MonitorInterfaz {
             k = rdp.disparoPosible(vector_disparo);  // Si la red de Petri puede disparar esa transicion, k es true
 
             if (k) {
-                // chequeo time
+                
                 boolean ventana = rdp.estaEnVentanaTemporal(transicion, politica);
-                if (!ventana) { //el tiempo transcurrido es menor al alfa
+                if (!ventana) { // Si el tiempo transcurrido es menor a alfa
                     System.out.println("Todavia no cumpli con el tiempo de espera T"+ transicion);
 
-                    /**
-                     if (hayDurmiendo){
-                     System.out.println("Ya habia un hilo durmiendo, me voy a la cola");
-                     k = false;
-                     } else {*/
-
                     mutex.release();
-                    //hayDurmiendo = true;
+                    
                     try {
                         int tiempoRestante = rdp.getTiempoRestante(transicion, getPolitica());
 
@@ -82,10 +76,10 @@ public class Monitor implements MonitorInterfaz {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    //hayDurmiendo = false;
+                    
                     System.out.println("Me desperte y me voy T"+ transicion);
                     return false;
-                    //}
+                    
                 }
 
                 System.out.println("Me disparo T"+ transicion);
