@@ -20,12 +20,7 @@ public class Monitor implements MonitorInterfaz {
 
     private RdP rdp;
 
-
-
-    private static boolean hayDurmiendo;
-
     public Monitor(RdP rdp) {
-        hayDurmiendo = false;
         k = false;
         this.rdp = rdp;
     }
@@ -43,9 +38,9 @@ public class Monitor implements MonitorInterfaz {
     public boolean fireTransition(int transicion) {
 
         try { // El hilo intenta tomar el mutex para entrar al monitor
-            System.out.println("Intento Agarrar Mutex T"+ transicion);
+            System.out.println("Intento agarrar el mutex T"+ transicion);
             mutex.acquire(); // Si el mutex no esta disponible, el hilo se agrega a una cola justa que llamaremos cola E
-            System.out.println("Agarre Mutex T"+ transicion);
+            System.out.println("Pude agarrar el mutex T"+ transicion);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -63,7 +58,7 @@ public class Monitor implements MonitorInterfaz {
                 
                 boolean ventana = rdp.estaEnVentanaTemporal(transicion, politica);
                 if (!ventana) { // Si el tiempo transcurrido es menor a alfa
-                    System.out.println("Todavia no cumpli con el tiempo de espera T"+ transicion);
+                    System.out.println("Todavía no cumplí con el tiempo de espera T"+ transicion);
 
                     mutex.release();
                     
@@ -76,8 +71,7 @@ public class Monitor implements MonitorInterfaz {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    
-                    System.out.println("Me desperte y me voy T"+ transicion);
+
                     return false;
                     
                 }
@@ -91,12 +85,11 @@ public class Monitor implements MonitorInterfaz {
 
                 for (int i = 0; i < sensibilizadas.length; i++) {
                     Tposibles[i] = sensibilizadas[i] * Tesperando[i]; // AND logico entre sensibilizadas y Tesperando
-
                 }
 
                 if (hayTransicionesPosibles(Tposibles)) {
                     int disparonuevo = politica.cual(Tposibles); // Devuelve la transicion del hilo que despertaremos
-                    System.out.println("Me identifico como T"+ transicion+ " y despierto a T"+ disparonuevo);
+                    System.out.println("Despierto a T"+ disparonuevo);
                     colaW.despertar(disparonuevo);
                     return true; // El hilo señalizador sale de monitor, habiendo disparado una transicion y despertando un hilo en espera
 

@@ -67,14 +67,10 @@ public class Politica {
             // Politica que resuelve el conflicto entre los agentes de la plaza P11 (T6) y P12 (T7)
             if(transicionesPosibles[6] == 1 && transicionesPosibles[7] == 1) {
                 int aux2 = hiloNaranja.getConfirmadas()+hiloRojo.getCanceladas();
-                System.out.println("Veces que se disparo T6: "+ hiloNaranja.getConfirmadas());
-                System.out.println("Veces que se disparo T7: "+ hiloRojo.getCanceladas());
 
                 if(hiloNaranja.getConfirmadas() <= (aux2 * 0.8)){
-                    System.out.println("Transicion elegida: 6");
                     return 6;
                 } else {
-                    System.out.println("Transicion elegida: 7");
                     return 7;
                 }
             }
@@ -93,8 +89,6 @@ public class Politica {
         return cual;
 
     }
-
-
     
     public boolean isBalanceada(){
         return balanceada;

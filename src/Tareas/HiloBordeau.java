@@ -34,7 +34,5 @@ public class HiloBordeau extends Thread {
         }
 
         // Si se llega al total de clientes, termina la ejecucion del hilo
-
-        System.out.println("NO SE ACEPTA EL INGRESO DE MAS CLIENTES");
     }
 }

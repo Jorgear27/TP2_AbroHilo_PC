@@ -121,7 +121,6 @@ public class RdP {
     public boolean estaEnVentanaTemporal(int transicion, Politica politica){
         long tiempoActual = System.currentTimeMillis();
         long tiempoTranscurrido = tiempoActual - TiempoSensibilizado[transicion];
-        System.out.println("tiempo que estuve sensibilizada: "+ tiempoTranscurrido);
         if(politica.isBalanceada()){
             return tiempoTranscurrido >= TiempoVentanaBalanceado[transicion];
         } else{
